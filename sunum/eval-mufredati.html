@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><title>Eval Müfredatı</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+@page { size: 1920px 1080px; margin: 0; }
+* { box-sizing: border-box; margin: 0; }
+html, body { background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+section { position: relative; width: 1920px; height: 1080px; overflow: hidden; page-break-after: always; break-after: page; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-weight: 600; padding: 14px 18px; border-bottom: 2px solid #1C1F26; }
+td { text-align: left; padding: 14px 18px; border-bottom: 1px solid #DDD8CC; vertical-align: top; }
+x-connector { display: block; flex: none; height: 4px; background: currentColor; position: relative; }
+x-connector::after { content: ""; position: absolute; right: -2px; top: -8px; border: 10px solid transparent; border-left: 14px solid currentColor; border-right: 0; }
+@media screen {
+  html, body { height: 100%; overflow: hidden; background: #111; }
+  section { position: absolute; left: 50%; top: 50%; transform-origin: center; display: none !important; }
+  section.aktif { display: flex !important; }
+  #sayac { position: fixed; right: 16px; bottom: 12px; font: 14px 'IBM Plex Sans', Arial, sans-serif; color: #8A909C; user-select: none; }
+}
+@media print { #sayac { display: none; } }
+</style></head><body>
+<section id="cover" data-transition="fade" style="background:#1C2230;color:#F6F4EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:space-between;gap:48px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F0A06B">Eval müfredatı · 8 modül</p>
+<div style="display:flex;flex-direction:column;gap:40px">
+<h1 style="font-family:'Source Serif 4', Georgia, serif;font-size:120px;font-weight:600;line-height:1.1;color:#F6F4EE">Ürünün çalıştığını<br>nasıl bilirsin?</h1>
+<p style="font-size:32px;line-height:1.4;color:#C9CED8;max-width:1200px">LLM ürünleri için eval: hata analizinden istatistiğe, birincil kaynaklarla ve her modülde bir alıştırmayla.</p>
+</div>
+<p style="font-size:24px;color:#C9CED8">Eğitim · Ekim 2026</p>
+
+</section>
+<section id="calisma" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Çalışma yöntemi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Her modül dört parçadan oluşur</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:44px;font-weight:600;color:#1C1F26">Fikir</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Tek cümleyle söylenebilen bir ilke.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:44px;font-weight:600;color:#1C1F26">Örnek</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">İlkenin gerçek bir üründe nasıl göründüğü.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:44px;font-weight:600;color:#1C1F26">Alıştırma</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Örnek botun ya da kendi ürününün çıktılarıyla yapılan iş.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:44px;font-weight:600;color:#1C1F26">Kaynak</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Blog özeti yerine birincil kaynak: makale ya da araç dokümanı.</p>
+</div>
+</div>
+<p style="font-size:32px;line-height:1.4;color:#1C1F26"><b>Kural:</b> her modül bir alıştırmayla biter. Eval, çıktı okuyup etiketleyerek öğrenilir.</p>
+
+</section>
+<section id="harita" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Müfredat haritası</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Her modül bir soruyu cevaplar ve bir dosya bırakır</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:24px;color:#1C1F26">
+<tr><th style="width:24%">Modül</th><th style="width:44%">Cevapladığı soru</th><th style="width:32%">Elinde kalan</th></tr>
+<tr><td>1 · Neden</td><td>Şu an değişiklikleri neye bakarak onaylıyorum?</td><td>Onay alışkanlığı notu</td></tr>
+<tr style="background:#EFEBE2"><td>2 · Hata analizi</td><td>Ürün gerçekte nerede, ne sıklıkta hata yapıyor?</td><td>taksonomi.md</td></tr>
+<tr><td>3 · Katmanlar</td><td>Hangi hata kodla, hangisi judge ile yakalanır?</td><td>Katman eşlemesi</td></tr>
+<tr style="background:#EFEBE2"><td>4 · Judge</td><td>Judge’a ne kadar güvenebilirim?</td><td>judges/*.md, uyum tablosu</td></tr>
+<tr><td>5 · İstatistik</td><td>Bu fark gerçek mi, gürültü mü?</td><td>Aralıklı skor raporu</td></tr>
+<tr style="background:#EFEBE2"><td>6 · Veri seti</td><td>Set gerçek kullanımı temsil ediyor mu?</td><td>golden.jsonl</td></tr>
+<tr><td>7 · Süreç</td><td>Eval ne zaman, hangi araçla koşar?</td><td>Çalışan eval komutu</td></tr>
+<tr style="background:#EFEBE2"><td>8 · Ödev</td><td>Hepsi kendi ürünümde çalışıyor mu?</td><td>Teslim paketi</td></tr>
+</table>
+
+</section>
+<section id="proje" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Eğitim boyunca örnek proje</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Bir e-ticaret destek botu</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">Ne yapıyor</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">İade, kargo, değişim ve sipariş sorularını cevaplıyor. Gerekirse konuşmayı bir temsilciye devrediyor.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">Elindekiler</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Mağazanın politika metni, sipariş sorgulama aracı, temsilciye devir aracı.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">Politika</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">14 gün iade hakkı. Kargo 2–4 iş günü. Değişimde kargo ücreti müşteriye ait.</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Neden bu proje: hataları herkes tanır, ve eval’in bütün katmanları burada doğal olarak ortaya çıkar. Bir link kodla kontrol edilir, politikaya uyum judge ister, çözülme oranı ise ancak canlıda ölçülür.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kurgu proje: mağaza, politika ve bütün konuşmalar eğitim için uyduruldu</p>
+
+</section>
+<section id="buyuk-resim" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Büyük resim</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Bot iyi çalışıyor mu? Altı adımda cevap</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;color:#A8461A">1 · Modül 2</p>
+<p style="font-size:30px;line-height:1.3;color:#1C1F26">Konuşmaları oku, gördüğün hataları not et.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;color:#A8461A">2 · Modül 2</p>
+<p style="font-size:30px;line-height:1.3;color:#1C1F26">Hataları grupla, hangisi kaç kez oluyor say.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;color:#A8461A">3 · Modül 3</p>
+<p style="font-size:30px;line-height:1.3;color:#1C1F26">Basit hataları birkaç satır kodla otomatik yakala.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;color:#A8461A">4 · Modül 4</p>
+<p style="font-size:30px;line-height:1.3;color:#1C1F26">Zor hataları ikinci bir yapay zekâya, yani hakeme notlat.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;color:#A8461A">5 · Modül 4</p>
+<p style="font-size:30px;line-height:1.3;color:#1C1F26">Hakemin doğru not verdiğini insan notlarıyla kontrol et.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;color:#A8461A">6 · Modül 5</p>
+<p style="font-size:30px;line-height:1.3;color:#1C1F26">Çıkan sayının ne kadar kesin olduğunu hesapla.</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Modül 6 ve 7 bu işi tekrarlanabilir yapar: doğru test seti ve doğru araçlar. Modül 8’de katılımcı altı adımı kendi ürününde baştan sona uygular.</p>
+
+</section>
+<section id="terimler-1" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Terimler 1/2 · Temel kavramlar</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Eğitimde geçen kelimeler</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:24%">Terim</th><th style="width:42%">Düz Türkçesi</th><th style="width:34%">Destek botunda</th></tr>
+<tr><td><b>Eval</b></td><td>Sistemi bir sınavdan geçirip sonucu sayıyla ölçmek</td><td>40 konuşmada %72 doğru</td></tr>
+<tr style="background:#EFEBE2"><td><b>Test seti</b></td><td>Doğru davranışı önceden bilinen örnekler</td><td>“İade süresi?” → “14 gün” geçmeli</td></tr>
+<tr><td><b>Hata taksonomisi</b></td><td>Gerçek hataların gruplanmış listesi</td><td>Uydurma link, yanlış politika</td></tr>
+<tr style="background:#EFEBE2"><td><b>Kod assertion</b></td><td>Kodla yazılmış otomatik kontrol</td><td>Verdiği link sitede var mı?</td></tr>
+<tr><td><b>Judge (hakem)</b></td><td>Cevaba not veren ikinci bir yapay zekâ</td><td>“Politikayla çelişiyor mu?”</td></tr>
+<tr style="background:#EFEBE2"><td><b>Geçti / kaldı</b></td><td>Hakemin evet/hayır kararı, puan değil</td><td>30 gün dedi → KALDI</td></tr>
+<tr><td><b>Few-shot örnek</b></td><td>Hakeme gösterilen çözülmüş örnekler</td><td>Uzmanın notladığı 3 konuşma</td></tr>
+</table>
+
+</section>
+<section id="terimler-2" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Terimler 2/2 · Ölçüm</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Sayılarla ilgili kelimeler</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:24%">Terim</th><th style="width:42%">Düz Türkçesi</th><th style="width:34%">Destek botunda</th></tr>
+<tr><td><b>Uyum</b></td><td>Hakemle insanın aynı kararı verme oranı</td><td>20’nin 16’sı → %80</td></tr>
+<tr style="background:#EFEBE2"><td><b>TPR</b></td><td>İyi cevapları “iyi” bulma oranı</td><td>14 iyinin 12’si</td></tr>
+<tr><td><b>TNR</b></td><td>Kötü cevapları yakalama oranı</td><td>6 kötünün 4’ü</td></tr>
+<tr style="background:#EFEBE2"><td><b>Kappa</b></td><td>Şans payı çıkarılmış uyum</td><td>0,52 = orta</td></tr>
+<tr><td><b>Hata payı</b></td><td>Skorun tekrar ölçülse ne kadar oynayacağı</td><td>%80 ± 11 puan</td></tr>
+<tr style="background:#EFEBE2"><td><b>Eşleştirilmiş karşılaştırma</b></td><td>İki versiyonu aynı sorularla kıyaslamak</td><td>Eski ve yeni prompt, aynı 40 soru</td></tr>
+<tr><td><b>Güç analizi</b></td><td>Kaç örnek gerektiğini önceden hesaplamak</td><td>10 puanlık fark için ≈ 250 örnek</td></tr>
+</table>
+
+</section>
+<section id="m1" data-section="Modül 1: eval neden gerekli" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 1 · Neden</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Eval yoksa her prompt değişikliği bir tahmindir</h2>
+</div>
+<div style="display:flex;align-items:center;gap:16px">
+<div style="flex:1;background:#FDFCF9;padding:24px 28px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:30px;line-height:1.3;color:#1C1F26">Promptu değiştir</p></div>
+<x-connector style="width:64px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px 28px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:30px;line-height:1.3;color:#1C1F26">Üç örneğe bak</p></div>
+<x-connector style="width:64px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px 28px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:30px;line-height:1.3;color:#1C1F26">“İyi görünüyor”</p></div>
+<x-connector style="width:64px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px 28px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:30px;line-height:1.3;color:#1C1F26">Başka bir yerde kırılır</p></div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3F4450">Goodhart yasası: bir ölçüt hedefe dönüşünce iyi bir ölçüt olmaktan çıkar. Eval setini bu yüzden hata analiziyle tazelersin.</p>
+<div style="display:flex;flex-direction:column;gap:12px;background:#EAE6DC;padding:32px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Alıştırma</p>
+<p style="font-size:30px;line-height:1.4;color:#1C1F26">Son beş prompt değişikliğini neye bakarak onayladığını yaz: kaç örneğe baktın, kim karar verdi, neyi hiç kontrol etmedin?</p>
+</div>
+
+</section>
+<section id="m1b" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 1 · Tanım</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Eval bir oran ölçer, bir hata payıyla</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Eval, botu bir sınavdan geçirip “yüzde kaç doğru?” sorusuna sayıyla cevap vermek.</p>
+<div style="display:flex;align-items:center;gap:16px">
+<div style="flex:1;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px"><h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">Girdi seti</h3><p style="font-size:24px;line-height:1.4;color:#3F4450">Gerçek kullanımı temsil eden vakalar</p></div>
+<x-connector style="width:56px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px"><h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">Sistem</h3><p style="font-size:24px;line-height:1.4;color:#3F4450">Prompt, model, araçlar: değiştirdiğin şey</p></div>
+<x-connector style="width:56px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px"><h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">Notlayıcı</h3><p style="font-size:24px;line-height:1.4;color:#3F4450">Kod, judge ya da insan</p></div>
+<x-connector style="width:56px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#1C2230;padding:28px;border-radius:16px"><h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#F6F4EE">Sonuç</h3><p style="font-size:24px;line-height:1.4;color:#C9CED8">%82 ± 6, kategori kırılımıyla</p></div>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:24%"></th><th style="width:38%">Birim testi</th><th style="width:38%">Eval</th></tr>
+<tr><td><b>Çıktı</b></td><td>Deterministik</td><td>Her koşumda değişebilir</td></tr>
+<tr style="background:#EFEBE2"><td><b>Hedef</b></td><td>%100 geçmek</td><td>Oranı izlemek ve yükseltmek</td></tr>
+<tr><td><b>Kırmızı</b></td><td>Bir şey bozuldu</td><td>Oran, hata payından fazla düştü</td></tr>
+</table>
+
+</section>
+<section id="m2" data-section="Modül 2: hata analizi ve kriter kayması" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 2 · Hata analizi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Önce oku, sonra ölç</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Kategorileri masa başında uydurma. Önce konuşmaları oku, notları sonra grupla.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:44px;font-weight:600;color:#A8461A">1</p>
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Topla</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">50–100 gerçek çıktı. Rastgele al, zor vakaları sonra eklersin.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:44px;font-weight:600;color:#A8461A">2</p>
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Açık kodla</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Her çıktıya serbest bir not: neyi yanlış yaptı? Kategori yok.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:44px;font-weight:600;color:#A8461A">3</p>
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Eksen kodla</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Notları ortak başlıklara topla. Hata taksonominin ilk hâli bu.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:44px;font-weight:600;color:#A8461A">4</p>
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Say</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Her kategori kaç kez geçiyor? En sık üçü ilk eval’lerin olur.</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3F4450">Açık ve eksen kodlama nitel araştırmadan gelir. Çıktı okunmadan yazılan eval, modelin hiç yapmadığı bir hatayı ölçebilir ve asıl hatayı kaçırır.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Strauss &amp; Corbin, Basics of Qualitative Research</p>
+
+</section>
+<section id="m2-ornek" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 2 · Çalışılmış örnek: açık kodlama</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Destek botunun altı konuşmasına not</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:24px;color:#1C1F26">
+<tr><th style="width:6%">#</th><th style="width:30%">Müşterinin sorusu</th><th style="width:64%">Açık kod notu (serbest, kategori yok)</th></tr>
+<tr><td>1</td><td>İade süresi ne kadar?</td><td>Politika 14 gün diyor, bot 30 gün dedi.</td></tr>
+<tr style="background:#EFEBE2"><td>2</td><td>Kargom nerede?</td><td>Takip için sitede olmayan bir link verdi.</td></tr>
+<tr><td>3</td><td>Beden değişimi yapabilir miyim?</td><td>Sorun yok.</td></tr>
+<tr style="background:#EFEBE2"><td>4</td><td>Ürünüm hasarlı geldi.</td><td>Özür diledi, genel bir metin yazdı. Ne yapılacağını söylemedi.</td></tr>
+<tr><td>5</td><td>Bir temsilciyle görüşmek istiyorum.</td><td>Müşteri iki kez istedi, bot devretmedi.</td></tr>
+<tr style="background:#EFEBE2"><td>6</td><td>İade formunu nereden doldururum?</td><td>“/iade-formu” diye bir sayfa uydurdu.</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Notlar düz cümle. Henüz “link sorunu” gibi bir başlık yok. Başlıklar bir sonraki geçişte gelir.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Örnek veri: konuşmalar ve notlar eğitim için kurgulandı</p>
+
+</section>
+<section id="m2-taksonomi" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 2 · Çalışılmış örnek: eksen kodlama</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">40 konuşma, dört kategori</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:24px"><p style="width:440px;font-size:28px;color:#1C1F26"><b>Uydurma link</b> · 2, 6</p><div style="width:540px;height:44px;background:#A8461A;border-radius:6px"></div><p style="font-size:28px;font-variant-numeric:tabular-nums;color:#1C1F26">9</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:440px;font-size:28px;color:#1C1F26"><b>Yanlış politika</b> · 1</p><div style="width:420px;height:44px;background:#A8461A;border-radius:6px"></div><p style="font-size:28px;font-variant-numeric:tabular-nums;color:#1C1F26">7</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:440px;font-size:28px;color:#1C1F26"><b>Devretmedi</b> · 5</p><div style="width:300px;height:44px;background:#A8461A;border-radius:6px"></div><p style="font-size:28px;font-variant-numeric:tabular-nums;color:#1C1F26">5</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:440px;font-size:28px;color:#1C1F26"><b>Sonraki adım yok</b> · 4</p><div style="width:240px;height:44px;background:#A8461A;border-radius:6px"></div><p style="font-size:28px;font-variant-numeric:tabular-nums;color:#1C1F26">4</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="width:440px;font-size:28px;color:#5A606B">Sorun yok · 3</p><div style="width:900px;height:44px;background:#CFC9BB;border-radius:6px"></div><p style="font-size:28px;font-variant-numeric:tabular-nums;color:#5A606B">15</p></div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">40 konuşmanın 25’inde hata var. İlk üç kategori hataların %84’ü (21/25). İlk eval’ler bunlar olur, “sonraki adım yok” bekleyebilir.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Örnek veri: sayılar eğitim için kurgulandı · kategori adının yanındaki rakamlar önceki slayttaki notlar</p>
+
+</section>
+<section id="m2-pratik" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 2 · Sahada kurallar</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Hata analizini işletmenin dört kuralı</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Tek etiketleyici</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Bir alan uzmanı, yani sen. Birden çok kişi tutarsız etiket üretir ve judge neye hizalanacağını bilemez.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">İlk hata yeter</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Her çıktıda en önemli hatayı yaz. Hepsini yazmaya çalışırsan 40 çıktı bir hafta sürer.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Doygunlukta dur</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Son 10 çıktıda yeni kategori çıkmadıysa taksonomi yeterli. Daha fazla okumak sayıyı değiştirir, listeyi değil.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Değişince tekrar oku</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Model ya da prompt değişince yeni hata türleri çıkar. Taksonomi bir kez yazılıp bırakılmaz.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Husain, Creating a LLM-as-a-Judge That Drives Business Results (2024) · “son 10 çıktı” eşiği bu müfredatın önerisi</p>
+
+</section>
+<section id="m2b" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 2 · Kriter kayması</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Kriterler çıktıyı okurken ortaya çıkar</h2>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#3F4450">Shankar ve arkadaşları (2024), değerlendirme kriterlerinin çıktılar notlanırken tanımlandığını ve notlandıkça değiştiğini gösterdi. Bunun adı kriter kayması.</p>
+<p style="font-size:30px;line-height:1.4;color:#1C1F26"><b>Sonuç:</b> kriteri masa başında yazıp ölçmeye geçme. Önce oku, kriteri çıktılardan çıkar, yazdığın kriteri yeni çıktılarla tekrar sına.</p>
+<div style="display:flex;flex-direction:column;gap:12px;background:#EAE6DC;padding:32px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Alıştırma</p>
+<p style="font-size:30px;line-height:1.4;color:#1C1F26">Okumaya başlamadan önce örnek botta ya da kendi ürününde en sık göreceğini düşündüğün üç hatayı yaz. Sonra 30 konuşmayı aç, açık ve eksen kodla, gerçek ilk üçü çıkar. İki listeyi karşılaştır.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Shankar vd., Who Validates the Validators? (2024)</p>
+
+</section>
+<section id="m3" data-section="Modül 3: eval katmanları" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 3 · Eval katmanları</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Hangi hatayı hangi yöntem yakalar?</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:28px;color:#1C1F26">
+<tr><th style="width:22%">Katman</th><th style="width:38%">Neyi yakalar</th><th style="width:15%">Maliyet</th><th style="width:25%">Ne zaman koşar</th></tr>
+<tr><td>Kod assertion</td><td>Format, JSON şeması, yasak ifade, uzunluk</td><td>Çok düşük</td><td>Her değişiklikte</td></tr>
+<tr style="background:#EFEBE2"><td>LLM judge</td><td>Tanımlanabilen öznel kriter: eksiksizlik, ton, kurala uyum</td><td>Orta</td><td>Her değişiklikte, örneklemle</td></tr>
+<tr><td>İnsan değerlendirmesi</td><td>Judge’ın kaçırdığı hatalar ve judge’ın kendi doğruluğu</td><td>Yüksek</td><td>Judge kurulurken ve düzenli aralıkla</td></tr>
+<tr style="background:#EFEBE2"><td>A/B ve ürün metriği</td><td>Gerçek kullanıcıdaki etki</td><td>En yüksek</td><td>Yayından sonra</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Husain, Your AI Product Needs Evals (2024). Katmanlar onun üç seviyesinden uyarlandı</p>
+
+</section>
+<section id="m3-kod" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 3 · Çalışılmış örnek: kod assertion</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">En sık hata judge istemiyor</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Bazı hataları basit bir kod satırı yakalar, yapay zekâ hakeme gerek kalmaz.</p>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:24px;color:#1C1F26">
+<tr><th style="width:30%">Kontrol</th><th style="width:46%">Kod</th><th style="width:24%">Yakaladığı</th></tr>
+<tr><td>Cevap çok uzun değil</td><td style="font-family:'JetBrains Mono', 'Courier New', monospace">len(reply) &lt;= 1200</td><td>Format</td></tr>
+<tr style="background:#EFEBE2"><td>Sipariş no doğru biçimde</td><td style="font-family:'JetBrains Mono', 'Courier New', monospace">re.fullmatch(r"\d{8}", order_id)</td><td>Format</td></tr>
+<tr><td>Her link sitede var</td><td style="font-family:'JetBrains Mono', 'Courier New', monospace">all(u in ALLOWED_URLS for u in links)</td><td><b>Uydurma link</b></td></tr>
+<tr style="background:#EFEBE2"><td>Temsilci istenince devir</td><td style="font-family:'JetBrains Mono', 'Courier New', monospace">not asked_agent or "handoff" in tools</td><td><b>Devretmedi</b></td></tr>
+</table>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Taksonomideki birinci ve üçüncü kategori, 25 hatanın 14’ü, kodla yakalanıyor. Ücretsiz, deterministik, her commit’te koşar.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Alan adları (links, tools, asked_agent) örnek; botun gerçek log biçimine göre uyarlanır</p>
+
+</section>
+<section id="m3-karar" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 3 · Katman seçimi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Her kategori için iki soru</h2>
+</div>
+<div style="display:flex;align-items:center;gap:16px">
+<div style="flex:1;background:#FDFCF9;padding:24px 28px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:28px;line-height:1.3;color:#1C1F26"><b>1.</b> Kodla kontrol edilebilir mi? <span style="color:#A8461A">Evet → assertion</span></p></div>
+<x-connector style="width:56px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px 28px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:28px;line-height:1.3;color:#1C1F26"><b>2.</b> Geçti/kaldı tanımı yazılabilir mi? <span style="color:#A8461A">Evet → judge</span></p></div>
+<x-connector style="width:56px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#EAE6DC;padding:24px 28px;border-radius:16px"><p style="font-size:28px;line-height:1.3;color:#1C1F26">İkisi de hayır → kriter henüz net değil, önce onu netleştir</p></div>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:30%">Kategori</th><th style="width:22%">Katman</th><th style="width:48%">Neden</th></tr>
+<tr><td>Uydurma link</td><td>Kod</td><td>Link izin listesinde mi?</td></tr>
+<tr style="background:#EFEBE2"><td>Devretmedi</td><td>Kod + judge</td><td>Açık istek kodla, dolaylı istek judge ile</td></tr>
+<tr><td>Yanlış politika</td><td>Judge</td><td>“Politikayla çelişiyor mu” yargı ister</td></tr>
+<tr style="background:#EFEBE2"><td>Sonraki adım yok</td><td>Judge</td><td>“Müşteri ne yapacağını biliyor mu” tanımlanabilir</td></tr>
+</table>
+
+</section>
+<section id="m3-al" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 3 · Alıştırma</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Her kategoriyi bir katmana yerleştir</h2>
+</div>
+<ol style="font-size:30px;line-height:1.5;color:#1C1F26">
+<li>Taksonomindeki her kategori için iki soruyu cevapla: kodla mı, judge ile mi?</li>
+<li>Kod tarafına düşen her kontrolü yaz.</li>
+<li>Her kontrole bilerek bozulmuş bir çıktı ver ve düştüğünü gör. Doğru bir çıktıyla geçtiğini de gör.</li>
+</ol>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Bitti sayılır</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Her kontrol en az bir kez kırmızı, bir kez yeşil yandı.</p>
+</div>
+
+</section>
+<section id="m4" data-section="Modül 4: LLM-as-judge kurmak ve doğrulamak" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · LLM-as-judge</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Hakem puan mı versin, evet/hayır mı?</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px 40px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#5A606B">Kaçın · 1–5 puan</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">3 ile 4 arasındaki farkı kimse tanımlayamaz. Puanlar kayar, judge ile insanın uyumu ölçülemez.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px 40px;border:2px solid #A8461A;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Tercih et · Geçti / Kaldı</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Her kriter için tek soru: bu çıktı X’i yapıyor mu? Kararın tanımı yazılabilir, uyumu ölçülebilir.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Judge prompt’unun anatomisi</h3>
+<ol style="font-size:28px;line-height:1.5;color:#3F4450">
+<li>Tek kriter, tek judge</li>
+<li>Geçti ve kaldı tanımı, sınır vakasıyla birlikte</li>
+<li>Etiketlenmiş birkaç örnek (few-shot)</li>
+<li>Önce gerekçe, sonra karar</li>
+</ol>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Husain, Creating a LLM-as-a-Judge That Drives Business Results (2024)</p>
+
+</section>
+<section id="m4-prompt" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Çalışılmış örnek: judge prompt’u</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">“Yanlış politika” judge’ı</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:start">
+<div style="width:900px;background:#1C2230;padding:40px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;color:#E6E8EC">Tek bir şeye bakıyorsun: botun cevabı<br>politika metniyle çelişiyor mu?<br><br>GEÇTİ: Cevaptaki her süre, ücret ve koşul<br>politika metninde aynen var.<br>KALDI: En az bir süre, ücret ya da koşul<br>politikayla çelişiyor ya da politikada yok.<br><br>Sınır vakası: bot “emin değilim, temsilciye<br>aktarıyorum” diyorsa çelişki değil.<br><br>&lt;örnekler&gt;{{etiketli_ornekler}}&lt;/örnekler&gt;<br>&lt;politika&gt;{{politika}}&lt;/politika&gt;<br>&lt;konuşma&gt;{{konusma}}&lt;/konuşma&gt;<br><br>Önce gerekçe, son satırda GEÇTİ ya da KALDI.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Tek kriter.</b> Ton ya da format sorulmuyor.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>İkili tanım.</b> İki durum birbirini dışlıyor, arada bir şey yok.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Sınır vakası.</b> Taksonomi dosyasından geliyor.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Örnekler.</b> Uzmanın etiketleri ve eleştirileri, yalnız geliştirme setinden.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Önce gerekçe.</b> Karar sona kalıyor.</p>
+</div>
+</div>
+
+</section>
+<section id="m4-critique" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Critique shadowing</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Etiketin yanına bir eleştiri yaz</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:24px;color:#1C1F26">
+<tr><th style="width:8%">#</th><th style="width:14%">Karar</th><th style="width:78%">Eleştiri (yeni bir çalışanın anlayacağı kadar açık)</th></tr>
+<tr><td>1</td><td>KALDI</td><td>Politika iade süresini 14 gün diyor, bot 30 gün dedi. Müşteri 20. günde iade etmeye çalışıp reddedilir.</td></tr>
+<tr style="background:#EFEBE2"><td>3</td><td>GEÇTİ</td><td>Değişim koşulları politikadakiyle aynı. Kargo ücretinin müşteriye ait olduğunu doğru söyledi.</td></tr>
+<tr><td>7</td><td>GEÇTİ</td><td>Kampanyalı ürünün iadesini bilmediğini söyleyip temsilciye aktardı. Kurala göre çelişki sayılmaz.</td></tr>
+</table>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+<p style="font-size:24px;padding:12px 20px;background:#EAE6DC;border-radius:24px;color:#1C1F26">1 · Uzmanı seç</p>
+<p style="font-size:24px;padding:12px 20px;background:#EAE6DC;border-radius:24px;color:#1C1F26">2 · Veri seti</p>
+<p style="font-size:24px;padding:12px 20px;background:#EAE6DC;border-radius:24px;color:#1C1F26">3 · Karar + eleştiri</p>
+<p style="font-size:24px;padding:12px 20px;background:#EAE6DC;border-radius:24px;color:#1C1F26">4 · Hataları düzelt</p>
+<p style="font-size:24px;padding:12px 20px;background:#EAE6DC;border-radius:24px;color:#1C1F26">5 · Judge’ı kur</p>
+<p style="font-size:24px;padding:12px 20px;background:#EAE6DC;border-radius:24px;color:#1C1F26">6 · Uyumu ölç</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Husain, Creating a LLM-as-a-Judge That Drives Business Results (2024) · eleştiriler örnek veri</p>
+
+</section>
+<section id="m4b" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Judge yanlılıkları</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Judge da yanılır, hep aynı yönlere</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Hakem olarak kullanılan yapay zekânın da bilinen, tekrarlayan kör noktaları var.</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Konum</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">İkili karşılaştırmada belirli bir sıradaki cevabı kayırır.</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26"><b>Önlem:</b> sırayı değiştirip iki kez sor. Kararlar uyuşmazsa berabere say.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Uzunluk</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Daha uzun cevabı, daha iyi olmasa da tercih eder.</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26"><b>Önlem:</b> kriterde uzunluğun ödül olmadığını yaz, uzunluğu ayrı ölç.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Kendini kayırma</h3>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">Kendi model ailesinin ürettiği cevaba yüksek not verebilir.</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26"><b>Önlem:</b> judge’ı insan etiketiyle hizala. Gerekirse başka bir modelle çapraz kontrol et.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Zheng vd., Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (2023)</p>
+
+</section>
+<section id="m4c" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Judge’ı doğrulamak</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Hakeme nasıl güveneceğiz?</h2>
+</div>
+<div style="display:flex;gap:64px;align-items:start">
+<table style="width:780px;font-family:'IBM Plex Sans', Arial, sans-serif;font-size:28px;color:#1C1F26">
+<tr><th style="width:32%"></th><th style="width:34%">İnsan: geçti</th><th style="width:34%">İnsan: kaldı</th></tr>
+<tr><td><b>Judge: geçti</b></td><td>Doğru pozitif</td><td>Yanlış pozitif</td></tr>
+<tr style="background:#EFEBE2"><td><b>Judge: kaldı</b></td><td>Yanlış negatif</td><td>Doğru negatif</td></tr>
+</table>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>TPR:</b> insanın “geçti” dediklerinin ne kadarına judge da geçti dedi.</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>TNR:</b> insanın “kaldı” dediklerinin ne kadarına judge da kaldı dedi.</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>Ham uyum yanıltır:</b> çıktıların %90’ı iyiyse her şeye “geçti” diyen judge %90 uyum alır ve tek hata yakalamaz. Cohen’s kappa şans payını düşer.</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#1C1F26">Etiketli veriyi ikiye böl: judge prompt’unu geliştirme setinde düzelt, test setinde bir kez ölç. Test setine bakarak düzeltirsen ölçtüğün şey ezber olur.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Shankar vd. 2024; Husain’in judge hizalama yazıları</p>
+
+</section>
+<section id="m4-hesap" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Çalışılmış örnek: hakemi kontrol etmek</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">%80 uyum, ama hataların üçte biri kaçıyor</h2>
+</div>
+<div style="display:flex;gap:64px;align-items:start">
+<div style="width:700px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;color:#5A606B">20 konuşma · insan: 14 iyi, 6 kötü</p>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:28px;color:#1C1F26">
+<tr><th style="width:36%"></th><th style="width:32%">İnsan: iyi</th><th style="width:32%">İnsan: kötü</th></tr>
+<tr><td><b>Hakem: iyi</b></td><td>12</td><td>2</td></tr>
+<tr style="background:#EFEBE2"><td><b>Hakem: kötü</b></td><td>2</td><td>4</td></tr>
+</table>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">20 konuşmanın 16’sında aynı karar → <b>%80 uyum</b></p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">14 iyinin 12’sini “iyi” buldu → <b>%86</b> (TPR)</p>
+<p style="font-size:28px;line-height:1.4;color:#A8461A"><b>6 kötünün yalnızca 4’ünü yakaladı → %67 (TNR)</b></p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Her şeye “iyi” diyen tembel hakem bile %70 alırdı</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Şans payı çıkarılınca (kappa) → <b>0,52, orta</b></p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26"><b>Ders:</b> tek bir uyum sayısına bakma, kötüleri ne kadar yakaladığına ayrıca bak. Ve 6 kötü örnek az: en az 15–20 kötü örnek koymadan bu sayıya güvenme.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Örnek veri · 15–20 kötü örnek bu eğitimin önerisi</p>
+
+</section>
+<section id="m4-iterasyon" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Judge’ı düzeltmek</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Yanlış kararları oku, sebebi düzelt</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:36px;font-weight:600;color:#A8461A">1</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26">Geliştirme setindeki her yanlış kararı ve gerekçesini oku.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:36px;font-weight:600;color:#A8461A">2</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26">Ortak bir sebep bul: tanım mı belirsiz, sınır vakası mı eksik?</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:36px;font-weight:600;color:#A8461A">3</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26">Tanımı ya da sınır vakasını düzelt, bir örnek ekle.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:36px;font-weight:600;color:#A8461A">4</p>
+<p style="font-size:26px;line-height:1.4;color:#1C1F26">Geliştirme setinde tekrar ölç. Bittiğinde test setinde bir kez.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#EAE6DC;padding:32px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Tuzak</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Her yanlış kararı few-shot örneği olarak eklemek. Judge geliştirme setini ezberler, uyum yükselir, test setinde düşer. Örnek, bir sebebi temsil ettiği için eklenir.</p>
+</div>
+
+</section>
+<section id="m4-al" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 4 · Alıştırma</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">İlk judge’ını kur ve ölç</h2>
+</div>
+<ol style="font-size:30px;line-height:1.5;color:#1C1F26">
+<li>Judge gerektiren bir kategori seç. 40 çıktıya karar ve eleştiri yaz.</li>
+<li>20 geliştirme, 20 test olarak böl. Test setinde en az 6 “kaldı” olsun.</li>
+<li>Judge prompt’unu yaz, geliştirme setinde düzelt.</li>
+<li>Test setinde bir kez koş. TPR, TNR ve kappa’yı hesapla.</li>
+</ol>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Bitti sayılır</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Uyum tablosu dolu ve test setine düzeltme sırasında hiç bakılmadı.</p>
+</div>
+
+</section>
+<section id="m5" data-section="Modül 5: hata payı ve karşılaştırma istatistiği" data-transition="fade" style="background:#1C2230;color:#F6F4EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F0A06B">Modül 5 · İstatistik</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#F6F4EE">50 örnekte %80, aslında %69 ile %91 arası</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#F6F4EE;background:#2A3245;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Az soruyla ölçülen skor kesin değildir. Gerçek değer bir aralıkta bir yerdedir.</p>
+<div style="display:flex;gap:64px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:120px;font-weight:600;line-height:1.1;color:#F0A06B">±11</p>
+<p style="font-size:28px;line-height:1.4;color:#C9CED8">puan hata payı, n = 50, skor %80</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:120px;font-weight:600;line-height:1.1;color:#F6F4EE">±4</p>
+<p style="font-size:28px;line-height:1.4;color:#C9CED8">puan hata payı, n = 400, skor %80</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4;color:#C9CED8">Standart hata = √(p(1−p)/n); %95 güven aralığı ≈ ±1,96 × SE. Örnek sayısını dört katına çıkarmak hata payını yarıya indirir.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#C9CED8">Kaynak: Miller, Adding Error Bars to Evals (2024)</p>
+
+</section>
+<section id="m5-hesap" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 5 · Adım adım hata payı</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">50 örnekte %80’in aralığı</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Skorun yanına “artı eksi kaç puan” yazmanın hesabı, beş adımda.</p>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="flex:1;background:#FDFCF9;padding:24px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:24px;color:#5A606B">Varyans</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">0,8 × 0,2<br>= 0,16</p></div>
+<x-connector style="width:40px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:24px;color:#5A606B">n’ye böl</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">0,16 / 50<br>= 0,0032</p></div>
+<x-connector style="width:40px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:24px;color:#5A606B">Karekök = SE</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">√0,0032<br>= 0,057</p></div>
+<x-connector style="width:40px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#FDFCF9;padding:24px;border:1px solid #DDD8CC;border-radius:16px"><p style="font-size:24px;color:#5A606B">%95 için</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">1,96 × 0,057<br>= 0,11</p></div>
+<x-connector style="width:40px;color:#A8461A"></x-connector>
+<div style="flex:1;background:#1C2230;padding:24px;border-radius:16px"><p style="font-size:24px;color:#C9CED8">Aralık</p><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#F6F4EE">0,80 ± 0,11<br>= [%69, %91]</p></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>Okuma:</b> aynı sistemi başka 50 örnekle ölçseydin skor büyük olasılıkla %69 ile %91 arasında bir yere düşerdi.</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>Python:</b> <span style="color:#A8461A">se = (p * (1 - p) / n) ** 0.5</span>, sonra p ± 1.96 * se.</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>Sınır:</b> bu formül n büyükken çalışır. Birkaç yüzün altında bir sonraki slayttaki yöntemleri kullan.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Miller, Adding Error Bars to Evals (2024)</p>
+
+</section>
+<section id="m5-kucuk" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 5 · Küçük örneklem</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Az örnekte basit formül %100’ü aşar</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Örnek azken basit formül saçma sonuç verir. Küçük setlerde başka hesap kullanılır.</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#5A606B">Kaçın · CLT</p>
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:56px;font-weight:600;color:#1C1F26">[%77, %103]</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Üst sınır imkânsız bir değer. Aralık da olması gerekenden dar.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:2px solid #A8461A;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Tercih et · Wilson</p>
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:56px;font-weight:600;color:#1C1F26">[%70, %97]</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">0 ile 1 arasında kalır, uçlara yakın oranlarda doğru davranır.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:2px solid #A8461A;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Tercih et · Bayes</p>
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:56px;font-weight:600;color:#1C1F26">[%70, %97]</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Beta(1 + S, 1 + N − S) = Beta(19, 3) dağılımının %2,5 ve %97,5 noktaları.</p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Bitirme ödevindeki test seti 20 örnek. Orada CLT değil, Wilson ya da Bayes kullan.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Bowyer, Aitchison, Ivanova, Don’t Use the CLT in LLM Evals With Fewer Than a Few Hundred Datapoints (ICML 2025)</p>
+
+</section>
+<section id="m5b" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 5 · Karşılaştırma</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">İki promptu karşılaştırmanın beş kuralı</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:30%">Kural</th><th style="width:70%">Neden</th></tr>
+<tr><td><b>Standart hatayı raporla</b></td><td>Hata payı olmayan tek bir skor yorumlanamaz.</td></tr>
+<tr style="background:#EFEBE2"><td><b>Kümelenmiş SE</b></td><td>Aynı belgeden çıkan sorular bağımsız değildir. Onları bağımsız saymak hata payını küçük gösterir.</td></tr>
+<tr><td><b>Eşleştirilmiş fark</b></td><td>A ile B’yi aynı örneklerde koş, örnek başına farkı analiz et. Varyans düşer.</td></tr>
+<tr style="background:#EFEBE2"><td><b>Tekrarla</b></td><td>Model rastgele çalışır. Her örneği birkaç kez koşup ortalamak ölçüm gürültüsünü azaltır.</td></tr>
+<tr><td><b>Güç analizi</b></td><td>Görmek istediğin farkı baştan yaz, kaç örnek gerektiğini önceden hesapla.</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Miller, Adding Error Bars to Evals (2024)</p>
+
+</section>
+<section id="m5-eslesik" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 5 · Çalışılmış örnek: eşleştirilmiş fark</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">B, A’dan 15 puan iyi. Bu yeterli mi?</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Aynı 40 soruyu iki versiyona sorduk. Aradaki fark gerçek mi, şans mı?</p>
+<div style="display:flex;gap:64px;align-items:start">
+<div style="width:760px;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:24px;color:#5A606B">Aynı 40 örnek, iki prompt</p>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:28px;color:#1C1F26">
+<tr><th style="width:34%"></th><th style="width:33%">B geçti</th><th style="width:33%">B kaldı</th></tr>
+<tr><td><b>A geçti</b></td><td>26</td><td>3</td></tr>
+<tr style="background:#EFEBE2"><td><b>A kaldı</b></td><td><b>9</b></td><td>2</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">A: 29/40 = %72,5 · B: 35/40 = %87,5</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">Örnek başına fark d: +1 (9), −1 (3), 0 (28)</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">Ortalama d = 6 / 40 = +0,15</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">SE(d) = 0,084</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#A8461A"><b>Aralık = [−1,5; +31,5] puan</b></p>
+</div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Aralık sıfırı içeriyor: 40 örnekle 15 puanlık fark bile kanıtlanmış değil. Bilgiyi yalnızca uyuşmayan 12 örnek taşıyor, 9’a karşı 3.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Örnek veri · yöntem: Miller 2024</p>
+
+</section>
+<section id="m5-guc" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 5 · Güç analizi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">10 puanlık farkı görmek için kaç örnek?</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Ölçmeye başlamadan önce: görmek istediğin farkı görmek için kaç örnek lazım?</p>
+<div style="display:flex;gap:64px;align-items:center">
+<div style="display:flex;flex-direction:column;gap:8px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:120px;font-weight:600;line-height:1.1;color:#A8461A">≈ 250</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450">örnek, her prompt için</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Senaryo: A %75, B’nin %85 olmasını bekliyorsun. %5 anlamlılık, %80 güç, eşleştirmesiz.</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">n = (1,96 + 0,84)² × (0,75·0,25 + 0,85·0,15) / 0,10²</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:26px;line-height:1.4;color:#1C1F26">= 7,84 × 0,315 / 0,01 ≈ 247</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#EAE6DC;padding:32px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">PM için anlamı</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">40 örnekle yalnızca çok büyük farkları görebilirsin. Küçük bir iyileştirmeyi ölçmek istiyorsan ya örnek sayısını artır, ya eşleştir, ya da hedefini daha büyük bir farka göre koy. Bu kararı etiketlemeye başlamadan önce ver.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Formül: iki oran için standart örneklem büyüklüğü · güç analizinin eval’de yeri: Miller 2024</p>
+
+</section>
+<section id="m5-al" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 5 · Alıştırma</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Judge’ın sayısına hata payı koy</h2>
+</div>
+<ol style="font-size:30px;line-height:1.5;color:#1C1F26">
+<li>Uyum tablondaki TPR ve TNR için Wilson aralığını hesapla.</li>
+<li>Judge’a güvenmek için TNR’nin alt sınırı ne olmalı? Eşiği şimdi yaz.</li>
+<li>Alt sınır eşiğin altındaysa kaç “kaldı” örneği daha gerektiğini tahmin et.</li>
+</ol>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Bitti sayılır</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Eşik, sonuçları görmeden önce yazıldı.</p>
+</div>
+
+</section>
+<section id="m6" data-section="Modül 6: veri seti" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 6 · Veri seti</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Veri seti gerçek kullanımı yansıtmalı</h2>
+</div>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Gerçek girdiler</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">En değerli kaynak. Kullanıcının gerçekten yazdığı, senin aklına gelmeyecek olan.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Zor vakalar</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Hata analizinde bulduğun her kategoriden örnek. Regresyon seti buradan büyür.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:32px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:36px;font-weight:600;color:#1C1F26">Sentetik veri</h3>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">Boyutlarla üret: persona × görev × zorluk. Boşluk doldurur, gerçek dağılımı temsil etmez.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>Kontaminasyon:</b> herkese açık benchmark’lar modelin eğitim verisine sızmış olabilir. Kendi verin bu yüzden değerli.</p>
+<p style="font-size:28px;line-height:1.4;color:#3F4450"><b>Sete göre ayar:</b> prompt’u hep aynı sete bakarak düzeltirsen o sete uyum sağlarsın. Bir test setini ayrı tut.</p>
+</div>
+
+</section>
+<section id="m6-boyut" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 6 · Çalışılmış örnek: sentetik boyutlar</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Destek botu için dört eksen</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:22%">Eksen</th><th style="width:78%">Değerler</th></tr>
+<tr><td><b>Konu</b></td><td>İade · kargo · değişim · ödeme</td></tr>
+<tr style="background:#EFEBE2"><td><b>Ton</b></td><td>Sakin · aceleci · öfkeli</td></tr>
+<tr><td><b>Dil</b></td><td>Türkçe · İngilizce · yazım hatalı</td></tr>
+<tr style="background:#EFEBE2"><td><b>Tuzak</b></td><td>Politikada olmayan durum · çok adımlı soru · dolaylı temsilci isteği</td></tr>
+</table>
+<div style="display:flex;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px">
+<p style="font-family:'Source Serif 4', Georgia, serif;font-size:56px;font-weight:600;color:#1C1F26">4 × 3 × 3 × 3 = 108</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450">olası kombinasyon. Hepsi değil, gerçek veride az görülenler seçilir.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px">
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Akış:</b> kombinasyonu seç → konuşmayı yaz ya da ürettir → oku, gerçekçi değilse at → zor vaka olarak etiketle.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Eksenler ve değerler örnek, gerçek konuşmalardan türetilir</p>
+
+</section>
+<section id="m6-golden" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 6 · Golden set satırı</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Beklenen cevap yerine geçme koşulu</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Test setindeki her satır bir soru ve “doğru cevap neleri içermeli” listesi.</p>
+<div style="display:flex;gap:48px;align-items:start">
+<div style="width:900px;background:#1C2230;padding:40px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;color:#E6E8EC;white-space:nowrap">{<br>&#160;&#160;"id": "ds-014",<br>&#160;&#160;"split": "test",<br>&#160;&#160;"input": "golden/ds-014.json",<br>&#160;&#160;"expect": {<br>&#160;&#160;&#160;&#160;"handoff": false,<br>&#160;&#160;&#160;&#160;"must_mention": ["14 gün"],<br>&#160;&#160;&#160;&#160;"allowed_links": ["/iade"]<br>&#160;&#160;},<br>&#160;&#160;"origin": "gerçek",<br>&#160;&#160;"tags": ["iade", "öfkeli", "tr"]<br>}</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>split:</b> geliştirme ya da test. Test satırları dondurulur.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>expect:</b> tam metin değil, kontrol edilebilir koşullar.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>origin:</b> gerçek mi sentetik mi, skoru ayrı okumak için.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>tags:</b> skoru eksenlere göre kırmak için.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Alan adları örnek · JSONL: her satır bir JSON nesnesi</p>
+
+</section>
+<section id="m6-al" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 6 · Alıştırma</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Setindeki boşluğu bul</h2>
+</div>
+<ol style="font-size:30px;line-height:1.5;color:#1C1F26">
+<li>40 gerçek girdini dört eksene göre etiketle.</li>
+<li>Hiç görülmeyen ya da tek örnekli kombinasyonları listele.</li>
+<li>Bunlardan 5 sentetik vaka üret, oku, gerçekçi olanları say.</li>
+<li>Tutulanları golden.jsonl’a origin: sentetik ile ekle.</li>
+</ol>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Bitti sayılır</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Skoru gerçek ve sentetik vakalarda ayrı ayrı okuyabiliyorsun.</p>
+</div>
+
+</section>
+<section id="m7" data-section="Modül 7: süreç ve araçlar" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 7 · Süreç ve araçlar</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Eval’i her değişiklikte koş</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:start">
+<div style="width:760px;background:#1C2230;padding:40px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;color:#E6E8EC;white-space:nowrap">from inspect_ai import Task, task<br>from inspect_ai.dataset import json_dataset<br>from inspect_ai.scorer import model_graded_qa<br>from inspect_ai.solver import generate<br><br>@task<br>def destek_politikasi():<br>&#160;&#160;&#160;&#160;return Task(<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;dataset=json_dataset("golden.jsonl"),<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;solver=generate(),<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;scorer=model_graded_qa(),<br>&#160;&#160;&#160;&#160;)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Dataset:</b> girdi ve beklenen davranış (input, target).</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Solver:</b> modele ne yapılacağı: prompt, araç, zincir.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Scorer:</b> çıktının nasıl notlanacağı: kod ya da judge.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>promptfoo</b> aynı fikri YAML ile kurar: prompts, providers, tests, assert.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>Maliyet:</b> her judge kararı bir model çağrısı. Toplam = örnek × tekrar × kriter.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: Inspect AI dokümantasyonu (UK AI Security Institute ve Meridian Labs)</p>
+
+</section>
+<section id="m7-promptfoo" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 7 · promptfoo</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Aynı eval, YAML ile</h2>
+</div>
+<div style="display:flex;gap:48px;align-items:start">
+<div style="width:900px;background:#1C2230;padding:40px;border-radius:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.4;color:#E6E8EC;white-space:nowrap">prompts:<br>&#160;&#160;- file://prompts/destek.txt<br>providers:<br>&#160;&#160;- anthropic:messages:claude-sonnet-5-5<br>tests:<br>&#160;&#160;- vars:<br>&#160;&#160;&#160;&#160;&#160;&#160;soru: İade süresi ne kadar?<br>&#160;&#160;&#160;&#160;assert:<br>&#160;&#160;&#160;&#160;&#160;&#160;- type: contains<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;value: 14 gün<br>&#160;&#160;&#160;&#160;&#160;&#160;- type: llm-rubric<br>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;value: Cevap politikayla çelişmiyor.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>prompts:</b> sınanan sistem.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>providers:</b> model. İki model yazılırsa yan yana karşılaştırır.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>contains:</b> kod assertion.</p>
+<p style="font-size:26px;line-height:1.4;color:#3F4450"><b>llm-rubric:</b> judge. Tek cümlelik rubrik yerine Modül 4’teki tam prompt kullanılır.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Kaynak: promptfoo dokümantasyonu · dosya yolları ve model adı örnek</p>
+
+</section>
+<section id="m7-ci" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 7 · Ritim</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Hangi eval ne zaman koşar</h2>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26;background:#FBEADF;padding:16px 24px;border-radius:12px"><b>Ne demek?</b> Ucuz kontroller her değişiklikte, pahalı olanlar daha seyrek çalışır.</p>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:22%">Ne zaman</th><th style="width:44%">Ne koşar</th><th style="width:34%">Maliyet</th></tr>
+<tr><td>Her commit</td><td>Kod assertion’ları, tüm set</td><td>Ücretsiz, saniyeler</td></tr>
+<tr style="background:#EFEBE2"><td>Prompt değişikliği</td><td>Judge’lar, geliştirme seti</td><td>Örnek × tekrar × kriter çağrı</td></tr>
+<tr><td>Sürüm öncesi</td><td>Tam set, test seti, önceki sürümle eşleştirilmiş karşılaştırma</td><td>En pahalı otomatik koşum</td></tr>
+<tr style="background:#EFEBE2"><td>Düzenli aralıkla</td><td>Yeni gerçek çıktılarda hata analizi</td><td>Senin zamanın</td></tr>
+</table>
+<div style="display:flex;flex-direction:column;gap:12px;background:#EAE6DC;padding:32px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Regresyon kuralı</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Düzelttiğin her hata sete bir vaka olarak girer. Set böylece ürünün geçmişte yaptığı hataların hafızası olur.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#5A606B">Ritim Husain’in üç seviyesinin maliyet sırasını izliyor (Your AI Product Needs Evals, 2024)</p>
+
+</section>
+<section id="m7-al" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 7 · Alıştırma</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Eval’i bir komutla koşturulabilir yap</h2>
+</div>
+<ol style="font-size:30px;line-height:1.5;color:#1C1F26">
+<li>Kod assertion’larını projenin test süitine (örneğin pytest) ekle.</li>
+<li>Judge’ı Inspect ya da promptfoo ile kur, önce 3 vakayla koş.</li>
+<li>Komutun verdiği skoru, aynı 3 vaka için elle hesapladığınla karşılaştır.</li>
+</ol>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Bitti sayılır</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Tek komut, elle hesapla aynı sonucu veriyor.</p>
+</div>
+
+</section>
+<section id="m8" data-section="Modül 8: bitirme ödevi ve kaynaklar" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 8 · Bitirme ödevi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Kendi ürününde uçtan uca bir eval</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">1 · Seç ve topla</h3>
+<p style="font-size:24px;line-height:1.4;color:#3F4450">Kendi ürününden bir akış seç. Ürünü olmayan destek botunu kullanır. 40 gerçek konuşma topla.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">2 · Oku</h3>
+<p style="font-size:24px;line-height:1.4;color:#3F4450">40 çıktıyı açık ve eksen kodla, en sık üç hatayı çıkar.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">3 · Judge yaz</h3>
+<p style="font-size:24px;line-height:1.4;color:#3F4450">Her hata için ikili bir judge: geçti/kaldı tanımı ve örnekler.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">4 · Etiketle</h3>
+<p style="font-size:24px;line-height:1.4;color:#3F4450">40 çıktıyı kendin etiketle: 20 geliştirme, 20 test.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">5 · Hizala</h3>
+<p style="font-size:24px;line-height:1.4;color:#3F4450">Judge’ı geliştirme setinde düzelt, test setinde TPR ve TNR’yi bir kez ölç.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:28px;border:1px solid #DDD8CC;border-radius:16px">
+<h3 style="font-family:'Source Serif 4', Georgia, serif;font-size:32px;font-weight:600;color:#1C1F26">6 · Karşılaştır</h3>
+<p style="font-size:24px;line-height:1.4;color:#3F4450">Prompt’u değiştir, aynı 40 örnekte eşleştirilmiş farkı hata payıyla raporla.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#FDFCF9;padding:28px 40px;border-left:6px solid #A8461A;border-radius:8px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Başarı ölçütü</p>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Judge test setinde TPR ve TNR ≥ [eşik, örn. %80: sen belirle]. Önce/sonra farkı hata payıyla raporlandı. Hakem judge’ın sözü değil, senin etiketlerin.</p>
+</div>
+
+</section>
+<section id="m8-teslim" style="background:#EAE6DC;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Modül 8 · Teslim paketi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">eval/ klasörüne beş dosya</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:26px;color:#1C1F26">
+<tr><th style="width:28%">Dosya</th><th style="width:38%">İçerik</th><th style="width:34%">Bitti ölçütü</th></tr>
+<tr style="background:#FDFCF9"><td style="font-family:'JetBrains Mono', 'Courier New', monospace">taksonomi.md</td><td>Kategoriler, tanım, sınır vakası, sayı</td><td>En az 40 çıktı okundu</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace">golden.jsonl</td><td>40 vaka, split ve origin etiketli</td><td>Test seti donduruldu</td></tr>
+<tr style="background:#FDFCF9"><td style="font-family:'JetBrains Mono', 'Courier New', monospace">graders/*.md</td><td>Judge gerektiren her kategori için bir prompt</td><td>Sınır vakası yazılı</td></tr>
+<tr><td style="font-family:'JetBrains Mono', 'Courier New', monospace">uyum.md</td><td>Test setinde TPR, TNR, kappa</td><td>Wilson aralığıyla</td></tr>
+<tr style="background:#FDFCF9"><td style="font-family:'JetBrains Mono', 'Courier New', monospace">karsilastirma.md</td><td>Önce/sonra farkı, eşleştirilmiş</td><td>Aralık ve uyuşmayan örnekler okunmuş</td></tr>
+</table>
+<p style="font-size:28px;line-height:1.4;color:#1C1F26">Kod assertion’ları ayrı dosya değil: projenin mevcut test süitine eklenir.</p>
+
+</section>
+<section id="ozet" data-transition="fade" style="background:#1C2230;color:#F6F4EE;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#F0A06B">Kontrol listesi</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#F6F4EE">Bir eval sonucuna güvenmeden önce</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 64px">
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">1</span> · Kriter çıktılar okunarak mı çıktı?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">6</span> · Hata payı raporlandı mı?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">2</span> · Kodla yakalanabilen judge’a mı verildi?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">7</span> · n küçükse Wilson ya da Bayes mi?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">3</span> · Judge ikili mi, tek kriterli mi?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">8</span> · Karşılaştırma eşleştirilmiş mi?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">4</span> · TPR ve TNR ayrı ayrı ölçüldü mü?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">9</span> · Set gerçek kullanımı temsil ediyor mu?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">5</span> · Test seti hiç görülmeden mi ölçüldü?</p>
+<p style="font-size:28px;line-height:1.4;color:#E6E8EC"><span style="color:#F0A06B">10</span> · Uyuşmayan örnekler okundu mu?</p>
+</div>
+
+</section>
+<section id="kaynaklar" style="background:#F6F4EE;color:#1C1F26;font-family:'IBM Plex Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#A8461A">Kaynaklar</p>
+<h2 style="font-family:'Source Serif 4', Georgia, serif;font-size:72px;font-weight:600;line-height:1.1;color:#1C1F26">Birincil kaynaklar, okuma sırasıyla</h2>
+</div>
+<table style="font-family:'IBM Plex Sans', Arial, sans-serif;font-size:24px;color:#1C1F26">
+<tr><th style="width:62%">Kaynak</th><th style="width:26%">Ne için</th><th style="width:12%">Modül</th></tr>
+<tr><td>Husain (2024), Your AI Product Needs Evals</td><td>Katmanlar, ritim</td><td>1, 3, 7</td></tr>
+<tr style="background:#EFEBE2"><td>Strauss &amp; Corbin, Basics of Qualitative Research</td><td>Açık ve eksen kodlama</td><td>2</td></tr>
+<tr><td>Shankar vd. (UIST 2024), Who Validates the Validators?</td><td>Kriter kayması</td><td>2, 4</td></tr>
+<tr style="background:#EFEBE2"><td>Husain (2024), Creating a LLM-as-a-Judge That Drives Business Results</td><td>Critique shadowing</td><td>2, 4</td></tr>
+<tr><td>Zheng vd. (2023), Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena</td><td>Judge yanlılıkları</td><td>4</td></tr>
+<tr style="background:#EFEBE2"><td>Miller (2024), Adding Error Bars to Evals</td><td>Hata payı, güç</td><td>5</td></tr>
+<tr><td>Bowyer vd. (ICML 2025), Don’t Use the CLT in LLM Evals…</td><td>Küçük n</td><td>5</td></tr>
+<tr style="background:#EFEBE2"><td>Liang vd. (2022), Holistic Evaluation of Language Models</td><td>Çok boyutlu ölçüm</td><td>3, 6</td></tr>
+<tr><td>Inspect AI ve promptfoo dokümantasyonu</td><td>Araçlar</td><td>7</td></tr>
+</table>
+
+</section>
+<div id="sayac"></div>
+<script>
+// Ok tuşları, boşluk, tıklama ya da kaydırma ile gezinme; adres çubuğundaki #n slaydı hatırlar.
+const slaytlar = [...document.querySelectorAll("section")];
+const sayac = document.getElementById("sayac");
+let i = 0;
+function olcekle() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  for (const el of slaytlar) el.style.transform = `translate(-50%, -50%) scale(${s})`;
+}
+function goster(n) {
+  i = Math.max(0, Math.min(slaytlar.length - 1, n));
+  slaytlar.forEach((el, k) => el.classList.toggle("aktif", k === i));
+  sayac.textContent = `${i + 1} / ${slaytlar.length}`;
+  history.replaceState(null, "", `#${i + 1}`);
+}
+addEventListener("keydown", e => {
+  if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); goster(i + 1); }
+  else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); goster(i - 1); }
+  else if (e.key === "Home") goster(0);
+  else if (e.key === "End") goster(slaytlar.length - 1);
+  else if (e.key === "f") document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+});
+addEventListener("click", e => goster(e.clientX > innerWidth / 3 ? i + 1 : i - 1));
+let tx = null;
+addEventListener("touchstart", e => { tx = e.touches[0].clientX; });
+addEventListener("touchend", e => { if (tx === null) return; const d = e.changedTouches[0].clientX - tx; if (Math.abs(d) > 40) goster(d < 0 ? i + 1 : i - 1); tx = null; });
+addEventListener("resize", olcekle);
+olcekle();
+goster((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body></html>

@@ -7,6 +7,7 @@ Bu repo, LLM eval eğitimindeki alıştırmaların verisini içerir. Atlas Mağa
 - `politika.md`: mağazanın iade, kargo, değişim ve ödeme kuralları. Botun paylaşabileceği linkler ve uyması gereken davranış kuralları da burada.
 - `konusmalar.jsonl`: müşteri ile bot arasında geçen 40 konuşma, her satırda bir konuşma.
 - `sunum/eval-mufredati.pdf`: eğitimin sunumu, 45 slayt (8 modül).
+- `sunum/eval-mufredati.html`: aynı sunum, tarayıcıda sunum modunda. Dosyayı indirip tarayıcıda açın. Ok tuşları ya da tıklama slayt değiştirir, `f` tam ekran yapar, adresin sonundaki `#12` doğrudan 12. slayda gider.
 
 ## Konuşma formatı
 
